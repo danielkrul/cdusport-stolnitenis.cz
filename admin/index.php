@@ -1,23 +1,52 @@
 <?php
-	require '../engine/connect.php';
+	session_start();
+	include '../engine/connect.php';
 	$title = "Přihlášení";
 	include 'inc/header.php';
 
-	if (isset($_POST['name']) && isset($_POST['password'])) {
+	$displayErrorMessage = false;
+	$fullErrorMessage = '';
+	$error = false;
+
+	function displayError($_errorMessage){
+		global $displayErrorMessage;
+		global $fullErrorMessage;
+		global $error;
+		$displayErrorMessage = true;
+		$error = true;
+		$fullErrorMessage .= '<p>' . $_errorMessage . '</p>';
+	}
+
+	if (isset($_POST['logButton'])) {
 		$name = $_POST['name'];
 		$password = $_POST['password'];
 
 		if (trim($name) == '') {
-			echo '<script>alert("Zadejte uživatelské jméno!");</script>';
+			$errorMessage = 'Vyplňte přihlašovací jméno!';
+			displayError($errorMessage);
 		}
 		if (trim($password) == '') {
-			echo '<script>alert("Zadejte heslo!");</script>';
+			$errorMessage = 'Vyplňte heslo!';
+			displayError($errorMessage);
 		}
 
-		if(trim($name) == 'cdusport' && trim($password) == "12345678cfg33"){
-			header('Location: login.php');
-		} else {
-			echo '<script>alert("Špatné jméno nebo heslo!");</script>';
+		if(!$error){
+			// Ok
+			$nameStripped = $conn->real_escape_string($name);
+			$_password = $conn->real_escape_string($password);
+			$_passwordSHA = hash('sha256', $password);
+			
+			$sqlPasswordCorrect = "SELECT id FROM login WHERE password='$_passwordSHA' AND name='$nameStripped'";
+			$resultPasswordCorrect = mysqli_query($conn, $sqlPasswordCorrect);
+			
+			if(mysqli_num_rows($resultPasswordCorrect) == 0){
+				displayError('Jméno nebo heslo není správné!');
+			} else {
+				$_SESSION['name'] = $nameStripped;
+				$_SESSION['password'] = $_passwordSHA;
+
+				header("Location: login.php");
+			}
 		}
 	}
 ?>
@@ -43,22 +72,29 @@
 				<div class="loginWrapper">
 					<div class="login">
 						<form method="POST">
-						<h2>Přihlášení</h2>
+						<div class="title"><h2>Přihlášení</h2></div>
+						<div class="errorBox">
+							<?php
+								if($displayErrorMessage){
+									print_r($fullErrorMessage);
+								}
+							?>
+						</div>
 						<table>
 							<tr>
-								<td>Uživatelské jméno:</td>
+								<td class="leftC">Uživatelské jméno:</td>
 								<td>
 									<input type="text" name="name">
 								</td>
 							</tr>
 							<tr>
-								<td>Heslo:</td>
+								<td class="leftC">Heslo:</td>
 								<td>
 									<input type="password" name="password">
 								</td>
 							</tr>
 						</table>
-						<button class="logButton">Jaffa</button>
+						<input type="submit" name="logButton" value="Přihlásit" class="logButton"> 
 						</form>
 					</div>
 				</div>

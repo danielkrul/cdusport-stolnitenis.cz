@@ -1,7 +1,7 @@
 <div class="menuWrapper">
 	<div class="menu">
 		<ul>
-			<li class="<?php if($selectedPage == 'aktuality') echo 'active'; ?>"><a href="/" ><i class="fa fa-fw fa-home"></i> Aktuality</a></li>
+			<li class="<?php if($selectedPage == 'aktuality') echo 'active'; ?>"><a href="login.php" ><i class="fa fa-fw fa-home"></i> Aktuality</a></li>
 			<li class="<?php if($selectedPage == 'onas') echo 'active'; ?>"><a href="onas.php" ><i class="fa fa-fw fa-info"></i> O nás (kontakty)</a></li>
 			<li class="haSub <?php if($selectedPage == 'souteze') echo 'active'; ?>"><a href="#"><i class="fa fa-fw fa-trophy"></i> Soutěže +</a>
 				<ul class="sub">

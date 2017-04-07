@@ -1,5 +1,5 @@
-<?php 
-	require 'engine/connect.php';
+<?php
+	include '../engine/checkLogin.php';
 	$title = 'Jaffa';
 	$selectedPage = 'fotogalerie';
 	include 'inc/header.php';
@@ -9,7 +9,6 @@
     	unlink("design/images/fotky_full/". $i .".jpg");
    		imagejpeg($image,"design/images/fotky_full/". $i .".jpg", );
 	}*/
-
 	$photosArray = array();
 	$sql = "SELECT url, title FROM photogallery";
 	$result = $conn->query($sql);
@@ -30,13 +29,16 @@
 		<div id="inner">
 			<header id="head">
 				<div class="logo">
-					<a href="/"><img src="design/images/logo.png" alt="Logo"></a>
+					<a href="/"><img src="../design/images/logo.png" alt="Logo"></a>
 				</div>
 
 				<div class="background">
-					<img width="20" src="design/images/pingpong.png">
+					<img width="20" src="../design/images/pingpong.png">
 				</div>
 			</header>
+			<?php
+				include 'inc/adminPanel.php';
+			?>
 
 			<div id="content">
 				<?php
@@ -48,18 +50,14 @@
 					<div class="mainGallery">
 						<?php 
 							for ($i = 0; $i < count($photosArray); $i++) { 
-								echo '<a data-title="'. $photosArray[$i]['title'] .'" href="design/images/fotky_full/'. $photosArray[$i]['url'] .'" data-lightbox="roadtrip"><img class="imageView" src="design/images/fotky_full/'. $photosArray[$i]['url'] .'"></a>';
+								echo '<a data-title="'. $photosArray[$i]['title'] .'" href="../design/images/fotky_full/'. $photosArray[$i]['url'] .'" data-lightbox="roadtrip"><img class="imageView" src="../design/images/fotky_full/'. $photosArray[$i]['url'] .'"></a>';
 							}
 						?>
 					</div>
 				</div>
 			</div>
 		</div>
-		<?php 
-			include 'inc/foot.php';
-		?>
 	</div>
-
-	<script src="js/lightbox.js"></script>
+	<script src="../js/lightbox.js"></script>
 </body>
 </html>
